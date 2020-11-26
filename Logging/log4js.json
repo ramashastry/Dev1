@@ -6,14 +6,15 @@
     },
     "file":{
         "category":"test-file-appender",
-        "type":"file",
-        "filename":"Execution_Logfile.log",
+        "type":"File",
+        "filename":"./Logs/Execution_Logfile.log",
         "maxLogSize":46000,
-        "backups":7
-    }   
+        "backups":7,
+        "pattern": "%d %p %c %f:%l %m%n"
+    } 
     },
     "categories": {
-        "default":{"appenders":["console","file"],"level":"DEBUG"},
+        "default":{"appenders":["console","file"],"level":"DEBUG","enableCallStack": true},
         "file" :{"appenders":["file"],"level":"DEBUG"}
     }
-}
+}   

@@ -4,7 +4,7 @@ import { MBO_LoginPage } from "../pageObjects/MBO_LoginPage";
 import { MBO_TalentHomePage } from "../pageObjects/MBO_TalentHomePage";
 import { Utility } from "./utilities";
 import chai from "chai";
-import { log4jsconfig } from "../Logging/log4jsconfig";
+//import { log4jsconfig } from "../Logging/log4jsconfig";
 
 // var chai = require('chai');
 // chai.use(require('chai-as-promised'));
@@ -13,6 +13,7 @@ const mboTalentHomePage = new MBO_TalentHomePage;
 const expect = chai.expect;
 const until = protractor.ExpectedConditions;
 const util = new Utility;
+const logger = require("../Logging/letlog").default;
 
 
 Given('Application is launched in {string} Environment', async (environment) => {
@@ -21,13 +22,13 @@ Given('Application is launched in {string} Environment', async (environment) => 
     if (environment == 'Release') {
         await browser.get('https://connect-release.mbopartners.com/');
         util.waitForInvisibilityOfLoginPageSpinner();
-        log4jsconfig.Logger().info("user is in Release Environment");
+        logger.debug("user is in Release Environment");
 
     }
     else if (environment == 'Demo') {
         await browser.get('https://connect-demo.mbopartners.com');
         util.waitForInvisibilityOfLoginPageSpinner();
-        log4jsconfig.Logger().info("user is in Demo Environment");
+        logger.debug("user is in Demo Environment");
     }
 
 
@@ -62,10 +63,10 @@ When('I am in {string} landing page', async (userPage) => {
         await mboTalentHomePage.oppurtunities_link.isEnabled();
         await browser.getCurrentUrl().then(function (currenUrl) {
             if (currenUrl.toString().includes("associate")) {
-                log4jsconfig.Logger().info("We Are in Talent Page");
+                logger.debug("We Are in Talent Page");
             }
             else {
-                log4jsconfig.Logger().info("User Is In Different Page");
+                logger.debug("User Is In Different Page");
             }
 
         });
@@ -83,7 +84,7 @@ Then('I will see {string} tabs present', async (tabCount) => {
     util.waitForInvisibilityOfSpinner();
     var tabCountValue1 = (await mboTalentHomePage.talent_Home_Page_Tab_Count.count()).toString();
     expect(tabCountValue1).to.equal(tabCount);
-    log4jsconfig.Logger().info("Total Count of Tabs Present is :==>" + tabCountValue1);
+    logger.debug("Total Count of Tabs Present is :==>" + tabCountValue1);
 });
 
 Then('Those Tabs are {string},{string}, {string}, {string},{string}', async (shared_With_Me, shown_Interest, bookmarked, saved_Search_Results, all_Oppurtunities) => {
@@ -107,7 +108,7 @@ Then('Those Tabs are {string},{string}, {string}, {string},{string}', async (sha
     expect(tab4_saved_searc_results).to.equal(saved_Search_Results);
     var tab5_al_oppurtunities = await mboTalentHomePage.tab_Alloppurtunities.getText();
     expect(tab5_al_oppurtunities).to.equal(all_Oppurtunities);
-    log4jsconfig.Logger().info("All Tab Have Matched Perfectly With What Has Been Displayed in UI");
+    logger.debug("All Tab Have Matched Perfectly With What Has Been Displayed in UI");
 });
 
 Then('I will see sort by option available with in every tab', async () => {
@@ -150,16 +151,16 @@ Then('I will see total count of opportunity cards shared with me', async () => {
     util.waitForInvisibilityOfSpinner();
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Oppurtunity_Card_Count), 10000, "Waiting for Oppurtunities Card Count To Be Displayed");
     var oppurtunitycardcount = await (await (await mboTalentHomePage.talent_Home_Page_Oppurtunity_Card_Count.getText()).split(" ", 1));
-    log4jsconfig.Logger().info("Total Number Of Oppurtunity Cards Count Displayed Is:===>" + oppurtunitycardcount);
+    logger.debug("Total Number Of Oppurtunity Cards Count Displayed Is:===>" + oppurtunitycardcount);
     var totalcardcount = await ((await mboTalentHomePage.talent_Home_Page_Oppurtunity_Card.count()).toString());
     expect(oppurtunitycardcount).to.have.eql([totalcardcount]);
-    log4jsconfig.Logger().info("Assertion Is Passed And The Card Count Is :" + totalcardcount);
+    logger.debug("Assertion Is Passed And The Card Count Is :" + totalcardcount);
 });
 
 Then('I will see count of opportunities', async () => {
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Oppurtunity_Card_Count), 10000, "Waiting for Oppurtunities Card Count To Be Displayed");
     var oppurtunitycardcount = await (await (await mboTalentHomePage.talent_Home_Page_Oppurtunity_Card_Count.getText()).split(" ", 1));
-    log4jsconfig.Logger().info("Total Number of Oppurtunity Cards displayed is:===>" + oppurtunitycardcount);
+    logger.debug("Total Number of Oppurtunity Cards displayed is:===>" + oppurtunitycardcount);
 });
 
 Then('I will see the Opportunity Name', async () => {
@@ -168,7 +169,7 @@ Then('I will see the Opportunity Name', async () => {
         await browser.wait(until.visibilityOf(oppurtunitynamedisplayed));
         await oppurtunitynamedisplayed.isDisplayed();
         var oppurtunitynamedisplayedvalues = await (oppurtunitynamedisplayed.getText());
-        log4jsconfig.Logger().info("Oppurtunity name displayed is:===>" + oppurtunitynamedisplayedvalues);
+        logger.debug("Oppurtunity name displayed is:===>" + oppurtunitynamedisplayedvalues);
     });
 });
 
@@ -182,7 +183,7 @@ Then('I will see the Company logo', async () => {
         });
         await browser.wait(until.visibilityOf(oppurtunitypostedcompanylogo));
         await oppurtunitypostedcompanylogo.isDisplayed();
-        log4jsconfig.Logger().info("Company Logo is Verified");
+        logger.debug("Company Logo is Verified");
     });
 
 });
@@ -193,7 +194,7 @@ Then('I will see the Posted date of Opportunity in Month DD YYYY', async () => {
         await browser.wait(until.visibilityOf(oppurtunityposteddate));
         await oppurtunityposteddate.isDisplayed();
         var oppurtunityposteddate1 = await (oppurtunityposteddate.getText());
-        log4jsconfig.Logger().info("Oppurtunity Posted Date Is:===>" + oppurtunityposteddate1);
+        logger.debug("Oppurtunity Posted Date Is:===>" + oppurtunityposteddate1);
     });
 
 });
@@ -204,7 +205,7 @@ Then('I will see Location, Bill Rate, Start date and End date', async () => {
         await browser.wait(until.visibilityOf(oppurtunitylocation));
         await oppurtunitylocation.isDisplayed();
         var oppurtunitylocation1 = await (oppurtunitylocation.getText());
-        log4jsconfig.Logger().info("Oppurtunity Posted Location Is:===>" + oppurtunitylocation1);
+        logger.debug("Oppurtunity Posted Location Is:===>" + oppurtunitylocation1);
     });
 
 
@@ -213,7 +214,7 @@ Then('I will see Location, Bill Rate, Start date and End date', async () => {
         await browser.wait(until.visibilityOf(oppurtunitybillrate));
         await oppurtunitybillrate.isDisplayed();
         var oppurtunitybillrate1 = await (oppurtunitybillrate.getText());
-        log4jsconfig.Logger().info("Oppurtunity Posted Bill Rate Is:===>" + oppurtunitybillrate1);
+        logger.debug("Oppurtunity Posted Bill Rate Is:===>" + oppurtunitybillrate1);
     });
 
     //await (await mboTalentHomePage.talent_Home_Page_Oppurtunity_Start_Date).forEach(async (oppurtunitystartdate) => {
@@ -221,7 +222,7 @@ Then('I will see Location, Bill Rate, Start date and End date', async () => {
         await browser.wait(until.visibilityOf(oppurtunitystartdate));
         await oppurtunitystartdate.isDisplayed();
         var oppurtunitystartdate1 = await (oppurtunitystartdate.getText());
-        log4jsconfig.Logger().info("Oppurtunity Posted Start Date Is:===>" + oppurtunitystartdate1);
+        logger.debug("Oppurtunity Posted Start Date Is:===>" + oppurtunitystartdate1);
     });
 
 });
@@ -234,7 +235,7 @@ Then('The footer should be present on the bottom of the page', async () => {
     await mboTalentHomePage.talent_Home_Page_Footer.getAttribute('class').then(async (classvalue) => {
         var classvalue = classvalue.toString();
         expect(classvalue).to.contain('footer');
-        log4jsconfig.Logger().info("Extracted Class Value is:===>" + classvalue);
+        logger.debug("Extracted Class Value is:===>" + classvalue);
     });
 
     //expect(await mboTalentHomePage.talent_Home_Page_Footer.getAttribute('class')).to.contain('footer');
@@ -245,7 +246,7 @@ Then('The footer should contain the MBO Copyright signature with the current yea
 
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Copyright_Signature));
     await mboTalentHomePage.talent_Home_Page_Copyright_Signature.getText().then(function (copyrightext) {
-        log4jsconfig.Logger().info("CopyRight Text displayed is:===>" + copyrightext);
+        logger.debug("CopyRight Text displayed is:===>" + copyrightext);
         expect(copyrightext).to.contain('© 2020 MBO Partners, Inc.')
     })
 
@@ -253,14 +254,14 @@ Then('The footer should contain the MBO Copyright signature with the current yea
 Then('The footer should contain a Privacy Policy hyperlink and it should navigate to the right page', async () => {
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Privacy_Policy_link));
     await mboTalentHomePage.talent_Home_Page_Privacy_Policy_link.getText().then(function (privacypolicytext) {
-        log4jsconfig.Logger().info("Privacy Policy Text displayed is:===>" + privacypolicytext);
+        logger.debug("Privacy Policy Text displayed is:===>" + privacypolicytext);
         expect(privacypolicytext).to.contain('Privacy Policy');
     });
     await mboTalentHomePage.talent_Home_Page_Privacy_Policy_link.click();
     await browser.getAllWindowHandles().then(async (handles) => {
         await browser.switchTo().window(handles[1]).then(async () => {
             await browser.getCurrentUrl().then(async (privacypolicywindowurl) => {
-                log4jsconfig.Logger().info("Redirected Privacy Policy URL  displayed is:===>" + privacypolicywindowurl);
+                logger.debug("Redirected Privacy Policy URL  displayed is:===>" + privacypolicywindowurl);
                 expect(privacypolicywindowurl).to.contain('https://www.mbopartners.com/privacy-policy/')
                 //await browser.close();
             });
@@ -274,14 +275,14 @@ Then('The footer should contain Terms of Use hyperlink and it should navigate to
 
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Terms_Of_Use_link));
     await mboTalentHomePage.talent_Home_Page_Terms_Of_Use_link.getText().then(function (termsofusetext) {
-        log4jsconfig.Logger().info("Terms of Use Text displayed is:===>" + termsofusetext);
+        logger.debug("Terms of Use Text displayed is:===>" + termsofusetext);
         expect(termsofusetext).to.contain('Terms of Use');
     });
     await mboTalentHomePage.talent_Home_Page_Terms_Of_Use_link.click();
     await browser.getAllWindowHandles().then(async (handles) => {
         await browser.switchTo().window(handles[2]).then(async () => {
             await browser.getCurrentUrl().then(async (termsofuseurl) => {
-                log4jsconfig.Logger().info("Redirected Terms of Use URL displayed is:===>" + termsofuseurl);
+                logger.debug("Redirected Terms of Use URL displayed is:===>" + termsofuseurl);
                 expect(termsofuseurl).to.contain('https://www.mbopartners.com/terms-and-conditions/')
 
             });
@@ -294,7 +295,7 @@ Then('Verify that message saying Invalid Username or Password is displayed.', as
     await browser.wait(until.visibilityOf(mboLoginPage.talent_login_page_Invalidcredentials_Message));
     await mboLoginPage.talent_login_page_Invalidcredentials_Message.getText().then(function (messageforInvalidlogin) {
         expect(messageforInvalidlogin).to.contain('Invalid Username or Password.');
-        log4jsconfig.Logger().info("Message Displayed when invalid credentials used is:===>" + messageforInvalidlogin);
+        logger.debug("Message Displayed when invalid credentials used is:===>" + messageforInvalidlogin);
     });
 });
 
@@ -303,7 +304,7 @@ Then('Verify that there is a keyword search field', async () => {
     await mboTalentHomePage.talent_Home_Page_Keyword_Search_Field.isPresent();
     await mboTalentHomePage.talent_Home_Page_Keyword_Search_Field.getAttribute('placeholder').then(function (searchfieldplaceholdevalues) {
         expect(searchfieldplaceholdevalues).to.contain('Search by job title, job id, or skills...');
-        log4jsconfig.Logger().info("Place Holder Values displayed for Keywoprd search Field is:===>" + searchfieldplaceholdevalues);
+        logger.debug("Place Holder Values displayed for Keywoprd search Field is:===>" + searchfieldplaceholdevalues);
     });
 });
 
@@ -314,7 +315,7 @@ Then('Verify that the opportunities should be filtered based on the keyword ente
     await mboTalentHomePage.talent_Home_Page_Keyword_Search_Field.sendKeys(Key.ENTER);
     await mboTalentHomePage.talent_Home_Page_Search_Keyword_Used.isDisplayed();
     await mboTalentHomePage.talent_Home_Page_Search_Keyword_Used.getText().then(async (skilltextused) => {
-        log4jsconfig.Logger().info("Keyword used to search Oppurtunities is:===>" + skilltextused);
+        logger.debug("Keyword used to search Oppurtunities is:===>" + skilltextused);
         expect(skilltextused).to.equal('Automation');
     });
 });
@@ -342,27 +343,27 @@ Then('Verify that Talent should have options to filter the opportunities.', asyn
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Project_Dates));
     await mboTalentHomePage.talent_Home_Page_Project_Dates.getText().then(function (projectdatefiltertext) {
         expect(projectdatefiltertext).to.eql('Project Dates');
-        log4jsconfig.Logger().info("Project dates filter value displayed is:===>" + projectdatefiltertext);
+        logger.debug("Project dates filter value displayed is:===>" + projectdatefiltertext);
     });
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Client));
     await mboTalentHomePage.talent_Home_Page_Client.getText().then(function (clientfiltertext) {
         expect(clientfiltertext).to.eql('Client');
-        log4jsconfig.Logger().info("Client filter value displayed is:===>" + clientfiltertext);
+        logger.debug("Client filter value displayed is:===>" + clientfiltertext);
     });
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Bill_Rate));
     await mboTalentHomePage.talent_Home_Page_Bill_Rate.getText().then(function (billratefiltertext) {
         expect(billratefiltertext).to.eql('Bill Rate');
-        log4jsconfig.Logger().info("Bill Rate filter value displayed is:===>" + billratefiltertext);
+        logger.debug("Bill Rate filter value displayed is:===>" + billratefiltertext);
     });
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Location));
     await mboTalentHomePage.talent_Home_Page_Location.getText().then(function (locationfiltertext) {
         expect(locationfiltertext).to.eql('Location');
-        log4jsconfig.Logger().info("Location filter value displayed is:===>" + locationfiltertext);
+        logger.debug("Location filter value displayed is:===>" + locationfiltertext);
     });
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Skills));
     await mboTalentHomePage.talent_Home_Page_Skills.getText().then(function (skillsfiltertext) {
         expect(skillsfiltertext).to.eql('Skills');
-        log4jsconfig.Logger().info("Skill filter value displayed is:===>" + skillsfiltertext);
+        logger.debug("Skill filter value displayed is:===>" + skillsfiltertext);
     });
 
 
@@ -385,7 +386,7 @@ Then('Verify that The filter should have options Project Date,Client,Bill Rate,L
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Min_Bill_Rate_Hour));
     await mboTalentHomePage.talent_Home_Page_Min_Bill_Rate.getAttribute('aria-valuenow').then(function (billratevalue) {
         expect(billratevalue).to.equal(0);
-        log4jsconfig.Logger().info("Bill Rate Displayed is:===>" + billratevalue);
+        logger.debug("Bill Rate Displayed is:===>" + billratevalue);
     });
     await browser.waitForAngularEnabled(true);
     await browser.sleep(5000);
@@ -400,18 +401,18 @@ Then('Verify that The filter should have options Project Date,Client,Bill Rate,L
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Bill_Rate_Radius_Miles));
     mboTalentHomePage.talent_Home_Page_Radius_Miles_Slider.getAttribute('aria-orientation').then(function (sliderorientation) {
         expect(sliderorientation).to.contain('horizontal');
-        log4jsconfig.Logger().info("Slider Orientation is:===>" + sliderorientation);
+        logger.debug("Slider Orientation is:===>" + sliderorientation);
     });
     mboTalentHomePage.talent_Home_Page_Radius_Miles_Slider.getAttribute('aria-valuenow').then(function (milesvalue) {
 
         expect(milesvalue).to.equal(0);
-        log4jsconfig.Logger().info("Default Radius Miles is:===>" + milesvalue);
+        logger.debug("Default Radius Miles is:===>" + milesvalue);
     });
 
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Remote_Work));
     mboTalentHomePage.talent_Home_Page_Remote_Work_Allowed_CheckBox.getAttribute('type').then(function (remoteworkallowedboxtype) {
         expect(remoteworkallowedboxtype).to.contain('checkbox');
-        log4jsconfig.Logger().info("Remote work allowed box type is:===>" + remoteworkallowedboxtype);
+        logger.debug("Remote work allowed box type is:===>" + remoteworkallowedboxtype);
     });
 
 });

@@ -10,6 +10,7 @@ export class Utility{
     async waitForInvisibilityOfSpinner(){
 
         await browser.wait(until.invisibilityOf(mboTalentHomePage.talent_Home_Page_Spinner));
+        await browser.wait(until.invisibilityOf(mboTalentHomePage.talent_Home_Page_PreLoadingAppContainer));
     }
 
     async waitForInvisibilityOfLoginPageSpinner(){
