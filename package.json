@@ -25,6 +25,8 @@
     "cucumber-html-reporter": "^4.0.4",
     "jasmine": "~3.3.1",
     "log4js": "^6.3.0",
+    "logback": "^1.0.16",
+    "properties-reader": "^2.1.1",
     "protractor": "^5.4.4",
     "protractor-cucumber-framework": "^6.1.1",
     "ts-node": "7.0.1",

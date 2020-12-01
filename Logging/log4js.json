@@ -1,20 +1,32 @@
 {
-    "appenders":{
-    "console":{
-        "type":"console",
-        "category":"console"
-    },
-    "file":{
-        "category":"test-file-appender",
-        "type":"File",
-        "filename":"./Logs/Execution_Logfile.log",
-        "maxLogSize":46000,
-        "backups":7,
-        "pattern": "%d %p %c %f:%l %m%n"
-    } 
+    "appenders": {
+        "console": {
+            "type": "console",
+            "category": "console"
+        },
+        "file": {
+            "category": "test-file-appender",
+            "type": "dateFile",
+            "filename": "./Logs/Execution_Logfile.log",
+            "maxLogSize": 46000,
+            "backups": 7,
+            "pattern": ".yyyy-MM-dd"
+        }
     },
     "categories": {
-        "default":{"appenders":["console","file"],"level":"DEBUG","enableCallStack": true},
-        "file" :{"appenders":["file"],"level":"DEBUG"}
+        "default": {
+            "appenders": [
+                "console",
+                "file"
+            ],
+            "level": "ALL",
+            "enableCallStack": true
+        },
+        "file": {
+            "appenders": [
+                "file"
+            ],
+            "level": "ALL"
+        }
     }
-}   
+}

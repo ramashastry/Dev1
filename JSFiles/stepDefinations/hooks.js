@@ -13,13 +13,20 @@ const cucumber_1 = require("cucumber");
 const protractor_1 = require("protractor");
 const utilities_1 = require("./utilities");
 const util = new utilities_1.Utility;
+const logger = require("../Logging/letlog").default;
 // Before({tags: "@Regression"}, async () => {
 //   // This hook will be executed before scenarios tagged with @foo
 //   browser.manage().window().maximize();
 // });
 cucumber_1.Before(() => __awaiter(void 0, void 0, void 0, function* () {
     // This hook will be executed before scenarios tagged with @foo
+    yield protractor_1.browser.waitForAngularEnabled(false);
     yield protractor_1.browser.manage().window().maximize();
+    // await browser.get('https://connect-release.mbopartners.com/');
+    // util.waitForInvisibilityOfLoginPageSpinner();
+    // logger.debug("user is in Release Environment");
+    // browser.launchSession();
+    // browser.restart();
 }));
 // After({tags: "@Regression"}, function () {
 //     // This hook will be executed before scenarios tagged with @foo
@@ -34,6 +41,7 @@ cucumber_1.After(function (scenario) {
             const screenshot = yield protractor_1.browser.takeScreenshot();
             this.attach(screenshot, "image/png");
         }
+        // util.appLogOut();
     });
 });
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9va3MuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zdGVwRGVmaW5hdGlvbnMvaG9va3MudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7QUFFQSx1Q0FBOEM7QUFDOUMsMkNBQXFDO0FBQ3JDLDJDQUFzQztBQUV0QyxNQUFNLElBQUksR0FBRyxJQUFJLG1CQUFPLENBQUM7QUFFekIsOENBQThDO0FBQzlDLG9FQUFvRTtBQUNwRSwwQ0FBMEM7QUFDMUMsTUFBTTtBQUVOLGlCQUFNLENBQUUsR0FBUyxFQUFFO0lBQ2pCLCtEQUErRDtJQUMvRCxNQUFNLG9CQUFPLENBQUMsTUFBTSxFQUFFLENBQUMsTUFBTSxFQUFFLENBQUMsUUFBUSxFQUFFLENBQUM7QUFDN0MsQ0FBQyxDQUFBLENBQUMsQ0FBQztBQUdILDZDQUE2QztBQUM3QyxzRUFBc0U7QUFDdEUsd0NBQXdDO0FBQ3hDLFFBQVE7QUFFUixnQkFBSyxDQUFDLFVBQWdCLFFBQVE7O1FBQzVCLCtEQUErRDtRQUMvRCxPQUFPLENBQUMsR0FBRyxDQUFDLG1CQUFtQixDQUFDLENBQUM7UUFDakMsSUFBSSxRQUFRLENBQUMsTUFBTSxDQUFDLE1BQU0sS0FBSSxpQkFBTSxDQUFDLE1BQU0sRUFDM0M7WUFDRSx5QkFBeUI7WUFDMUIsTUFBTSxVQUFVLEdBQUUsTUFBTSxvQkFBTyxDQUFDLGNBQWMsRUFBRSxDQUFDO1lBRTVDLElBQUksQ0FBQyxNQUFNLENBQUMsVUFBVSxFQUFDLFdBQVcsQ0FBQyxDQUFDO1NBQ3pDO0lBR0gsQ0FBQztDQUFBLENBQUMsQ0FBQyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9va3MuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zdGVwRGVmaW5hdGlvbnMvaG9va3MudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7QUFFQSx1Q0FBNEQ7QUFDNUQsMkNBQW1FO0FBQ25FLDJDQUFzQztBQUV0QyxNQUFNLElBQUksR0FBRyxJQUFJLG1CQUFPLENBQUM7QUFDekIsTUFBTSxNQUFNLEdBQUcsT0FBTyxDQUFDLG1CQUFtQixDQUFDLENBQUMsT0FBTyxDQUFDO0FBRXBELDhDQUE4QztBQUM5QyxvRUFBb0U7QUFDcEUsMENBQTBDO0FBQzFDLE1BQU07QUFFTixpQkFBTSxDQUFDLEdBQVMsRUFBRTtJQUNoQiwrREFBK0Q7SUFDL0QsTUFBTSxvQkFBTyxDQUFDLHFCQUFxQixDQUFDLEtBQUssQ0FBQyxDQUFDO0lBQzNDLE1BQU0sb0JBQU8sQ0FBQyxNQUFNLEVBQUUsQ0FBQyxNQUFNLEVBQUUsQ0FBQyxRQUFRLEVBQUUsQ0FBQztJQUMzQyxpRUFBaUU7SUFDakUsZ0RBQWdEO0lBQ2hELGtEQUFrRDtJQUNsRCwyQkFBMkI7SUFDM0IscUJBQXFCO0FBQ3ZCLENBQUMsQ0FBQSxDQUFDLENBQUM7QUFHSCw2Q0FBNkM7QUFDN0Msc0VBQXNFO0FBQ3RFLHdDQUF3QztBQUN4QyxRQUFRO0FBRVIsZ0JBQUssQ0FBQyxVQUFnQixRQUFROztRQUM1QiwrREFBK0Q7UUFDL0QsT0FBTyxDQUFDLEdBQUcsQ0FBQyxtQkFBbUIsQ0FBQyxDQUFDO1FBQ2pDLElBQUksUUFBUSxDQUFDLE1BQU0sQ0FBQyxNQUFNLEtBQUssaUJBQU0sQ0FBQyxNQUFNLEVBQUU7WUFDNUMseUJBQXlCO1lBQ3pCLE1BQU0sVUFBVSxHQUFHLE1BQU0sb0JBQU8sQ0FBQyxjQUFjLEVBQUUsQ0FBQztZQUVsRCxJQUFJLENBQUMsTUFBTSxDQUFDLFVBQVUsRUFBRSxXQUFXLENBQUMsQ0FBQztTQUN0QztRQUNELG9CQUFvQjtJQUN0QixDQUFDO0NBQUEsQ0FBQyxDQUFDIn0=

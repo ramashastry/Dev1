@@ -8,19 +8,19 @@ export let config: Config = {
    directConnect:true,
    framework:'custom',
    frameworkPath: require.resolve('protractor-cucumber-framework'),
-  //  restartBrowserBetweenTests:true,
-
+  // 
   
-  
-    // Capabilities to be passed to the webdriver instance.
+  // params:
+  // {
+  //   releaseurl:'https://connect-release.mbopartners.com/'
+  // },
     capabilities: {
-      browserName: 'chrome'
+      browserName: 'chrome',
+      // shardTestFiles:true,
+      //  maxInstances:3
+
     },
-  
-    // Spec patterns are relative to the configuration file location passed
-    // to protractor (in this example conf.js).
-    // They may include glob patterns.
-    specs: ['../features/*.feature'],
+    specs: ['../features/Talent.feature'],
     cucumberOpts: {
     
         format:'json:./cucumberreport.json', 
@@ -45,19 +45,10 @@ export let config: Config = {
               "Platform": "MACOS",
               "Parallel": "Scenarios",
               "Executed": "Remote"
-          }
-
-      
+          }     
       };
-
-    
    
       reporter.generate(options);
-
-
-      }
-
-  
-  
+      } 
   };
   

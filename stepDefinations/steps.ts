@@ -3,10 +3,12 @@ import { browser, ElementFinder, Key, protractor } from 'protractor';
 import { MBO_LoginPage } from "../pageObjects/MBO_LoginPage";
 import { MBO_TalentHomePage } from "../pageObjects/MBO_TalentHomePage";
 import { Utility } from "./utilities";
-import chai from "chai";
-//import { log4jsconfig } from "../Logging/log4jsconfig";
+// import * as logger from "logback";
 
-// var chai = require('chai');
+//import chai from "chai";
+
+
+const chai = require('chai').use(require('chai-as-promised'));
 // chai.use(require('chai-as-promised'));
 const mboLoginPage = new MBO_LoginPage;
 const mboTalentHomePage = new MBO_TalentHomePage;
@@ -14,31 +16,40 @@ const expect = chai.expect;
 const until = protractor.ExpectedConditions;
 const util = new Utility;
 const logger = require("../Logging/letlog").default;
+var propertiesReader = require('properties-reader');
+var inputProperties= propertiesReader('./stepDefinations/Framework.properties');
+
 
 
 Given('Application is launched in {string} Environment', async (environment) => {
-    await browser.waitForAngularEnabled(false);
+    //await browser.waitForAngularEnabled(false);
 
-    if (environment == 'Release') {
-        await browser.get('https://connect-release.mbopartners.com/');
+    if (environment == inputProperties.get('ReleaseEnvironment')) {
+       // await browser.get('https://connect-release.mbopartners.com/');
+        await browser.get(inputProperties.get('ReleaseUrl'));
         util.waitForInvisibilityOfLoginPageSpinner();
         logger.debug("user is in Release Environment");
 
+
     }
-    else if (environment == 'Demo') {
-        await browser.get('https://connect-demo.mbopartners.com');
+    else if (environment == inputProperties.get('DemoEnvironment')) {
+        //await browser.get('https://connect-demo.mbopartners.com');
+        await browser.get(inputProperties.get('DemoUrl'));
         util.waitForInvisibilityOfLoginPageSpinner();
         logger.debug("user is in Demo Environment");
+    }
+    else {
+        logger.error("user is in a different environemnet other than the oen specified");
     }
 
 
 });
 
 When('I am logged in as {string} using the {string} and {string}', async (user, userid, password) => {
-    await browser.waitForAngularEnabled(false);
+    //await browser.waitForAngularEnabled(false);
     await browser.wait(until.visibilityOf(mboLoginPage.talent_Login_page_mbo_Partners_Logo));
     await browser.wait(until.visibilityOf(mboLoginPage.talent_Login_page_loginPage_Header));
-    if (user === 'Talent') {
+    if (user === inputProperties.get('TypeOfUser')) {
         await browser.wait(until.visibilityOf(mboLoginPage.talent_Login_page_email_Address));
         await mboLoginPage.talent_Login_page_email_Address.sendKeys(userid);
         await browser.wait(until.visibilityOf(mboLoginPage.talent_Login_page_password));
@@ -56,7 +67,7 @@ When('I am logged in as {string} using the {string} and {string}', async (user, 
 
 When('I am in {string} landing page', async (userPage) => {
     util.waitForInvisibilityOfSpinner();
-    if (userPage === 'Talent') {
+    if (userPage === inputProperties.get('LandingPage')) {
         await browser.wait(until.presenceOf(mboTalentHomePage.tab_Shown_Interest));
         await browser.wait(until.presenceOf(mboTalentHomePage.oppurtunities_link));
         await browser.wait(until.visibilityOf(mboTalentHomePage.oppurtunities_link));
@@ -67,6 +78,7 @@ When('I am in {string} landing page', async (userPage) => {
             }
             else {
                 logger.debug("User Is In Different Page");
+                logger.error("Please debug to see why we are getting redirected to a different page");
             }
 
         });
@@ -234,7 +246,8 @@ Then('The footer should be present on the bottom of the page', async () => {
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Footer));
     await mboTalentHomePage.talent_Home_Page_Footer.getAttribute('class').then(async (classvalue) => {
         var classvalue = classvalue.toString();
-        expect(classvalue).to.contain('footer');
+        //expect(classvalue).to.contain('footer');
+        expect(classvalue).to.contain(inputProperties.get('FooterText'));
         logger.debug("Extracted Class Value is:===>" + classvalue);
     });
 
@@ -247,7 +260,8 @@ Then('The footer should contain the MBO Copyright signature with the current yea
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Copyright_Signature));
     await mboTalentHomePage.talent_Home_Page_Copyright_Signature.getText().then(function (copyrightext) {
         logger.debug("CopyRight Text displayed is:===>" + copyrightext);
-        expect(copyrightext).to.contain('© 2020 MBO Partners, Inc.')
+        //expect(copyrightext).to.contain('© 2020 MBO Partners, Inc.')
+        expect(copyrightext).to.contain(inputProperties.get('CopyRightText'));
     })
 
 });
@@ -255,14 +269,15 @@ Then('The footer should contain a Privacy Policy hyperlink and it should navigat
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Privacy_Policy_link));
     await mboTalentHomePage.talent_Home_Page_Privacy_Policy_link.getText().then(function (privacypolicytext) {
         logger.debug("Privacy Policy Text displayed is:===>" + privacypolicytext);
-        expect(privacypolicytext).to.contain('Privacy Policy');
+        //expect(privacypolicytext).to.contain('Privacy Policy');
+        expect(privacypolicytext).to.contain(inputProperties.get('PrivacyPolicyText'));
     });
     await mboTalentHomePage.talent_Home_Page_Privacy_Policy_link.click();
     await browser.getAllWindowHandles().then(async (handles) => {
         await browser.switchTo().window(handles[1]).then(async () => {
             await browser.getCurrentUrl().then(async (privacypolicywindowurl) => {
                 logger.debug("Redirected Privacy Policy URL  displayed is:===>" + privacypolicywindowurl);
-                expect(privacypolicywindowurl).to.contain('https://www.mbopartners.com/privacy-policy/')
+                expect(privacypolicywindowurl).to.contain(inputProperties.get('PrivacPolicyUrl'))
                 //await browser.close();
             });
         });
@@ -276,14 +291,14 @@ Then('The footer should contain Terms of Use hyperlink and it should navigate to
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Terms_Of_Use_link));
     await mboTalentHomePage.talent_Home_Page_Terms_Of_Use_link.getText().then(function (termsofusetext) {
         logger.debug("Terms of Use Text displayed is:===>" + termsofusetext);
-        expect(termsofusetext).to.contain('Terms of Use');
+        expect(termsofusetext).to.contain(inputProperties.get('TermsOfUseText'));
     });
     await mboTalentHomePage.talent_Home_Page_Terms_Of_Use_link.click();
     await browser.getAllWindowHandles().then(async (handles) => {
         await browser.switchTo().window(handles[2]).then(async () => {
             await browser.getCurrentUrl().then(async (termsofuseurl) => {
                 logger.debug("Redirected Terms of Use URL displayed is:===>" + termsofuseurl);
-                expect(termsofuseurl).to.contain('https://www.mbopartners.com/terms-and-conditions/')
+                expect(termsofuseurl).to.contain(inputProperties.get('TermsConditionUrl'))
 
             });
         });
@@ -316,7 +331,7 @@ Then('Verify that the opportunities should be filtered based on the keyword ente
     await mboTalentHomePage.talent_Home_Page_Search_Keyword_Used.isDisplayed();
     await mboTalentHomePage.talent_Home_Page_Search_Keyword_Used.getText().then(async (skilltextused) => {
         logger.debug("Keyword used to search Oppurtunities is:===>" + skilltextused);
-        expect(skilltextused).to.equal('Automation');
+        expect(skilltextused).to.equal(inputProperties.get('SkillKeywordUsedToSearchTalent'));
     });
 });
 Then('Verify Keywords should search on fields such as Title, Job ID, Skills, Company, and Job Description', async () => {
@@ -377,7 +392,7 @@ Then('Verify that The filter should have options Project Date,Client,Bill Rate,L
     await util.waitForInvisibilityOfSpinner();
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Project_Dates_Filter_Start_Date));
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Project_Dates_Filter_End_Date));
-    await (mboTalentHomePage.talent_Home_Page_Project_Dates_Filter_Date_Picker).each(async (datepickerforstartandenddate) =>{
+    await (mboTalentHomePage.talent_Home_Page_Project_Dates_Filter_Date_Picker).each(async (datepickerforstartandenddate) => {
         datepickerforstartandenddate.isDisplayed();
     });
     await browser.wait(until.visibilityOf(mboTalentHomePage.talent_Home_Page_Bill_Rate));
